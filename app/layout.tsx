@@ -16,7 +16,6 @@ const roboto = Roboto({
 
 type RootLayoutProps = {
   children: ReactNode;
-  modal: ReactNode;
 };
 
 export const metadata: Metadata = {
@@ -38,14 +37,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children, modal }: RootLayoutProps) {
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" className={roboto.variable}>
       <body>
         <TanStackProvider>
           <AuthProvider>
             <Header />
-            {modal}
             {children}
             <Footer />
           </AuthProvider>
