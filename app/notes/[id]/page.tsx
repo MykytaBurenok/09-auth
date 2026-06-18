@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { fetchNoteById } from "@/lib/api";
+import { fetchNoteById } from "../../../lib/api/serverApi";
 
 type NotePageProps = {
   params: Promise<{ id: string }>;
