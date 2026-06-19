@@ -4,24 +4,12 @@ import {
   dehydrate,
 } from "@tanstack/react-query";
 import NotePreviewClient from "./NotePreview.client";
+import { fetchNoteById } from "@/lib/api/serverApi";
 
 interface Props {
   params: Promise<{
     id: string;
   }>;
-}
-
-async function fetchNoteById(id: string) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notes/${id}`, {
-    credentials: "include",
-    cache: "no-store",
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch note");
-  }
-
-  return res.json();
 }
 
 export default async function NoteModalPage({ params }: Props) {
