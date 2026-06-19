@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import NoteDetailsClient from "@/components/NoteDetails/NoteDetailsClient";
+import NoteDetailsClient from "./NoteDetails.client";
 import { fetchNoteById } from "@/lib/api/serverApi";
 
 type NotePageProps = {
@@ -60,5 +60,5 @@ export default async function NotePage({ params }: NotePageProps) {
     notFound();
   }
 
-  return <NoteDetailsClient />;
+  return <NoteDetailsClient note={note} />;
 }
