@@ -1,38 +1,31 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-const privateRoutes = ["/profile", "/notes"];
-const publicRoutes = ["/sign-in", "/sign-up"];
-
-const isPrivateRoute = (pathname: string) =>
-  privateRoutes.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`),
-  );
-
-const isPublicRoute = (pathname: string) =>
-  publicRoutes.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`),
-  );
+const privateRoutes = ["/notes"];
+const publicAuthRoutes = ["/sign-in", "/sign-up"];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const sessionCookie = request.cookies.get("session-token")?.value;
 
-  const hasSession =
-    request.cookies.get("token") ||
-    request.cookies.get("session") ||
-    request.cookies.get("refreshToken");
+  const isPrivateRoute = privateRoutes.some((route) =>
+    pathname.startsWith(route),
+  );
 
-  if (isPrivateRoute(pathname) && !hasSession) {
+  const isPublicAuthRoute = publicAuthRoutes.some((route) =>
+    pathname.startsWith(route),
+  );
+
+  if (!sessionCookie && isPrivateRoute) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
 
-  if (isPublicRoute(pathname) && hasSession) {
-    return NextResponse.redirect(new URL("/profile", request.url));
+  if (sessionCookie && isPublicAuthRoute) {
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/profile/:path*", "/notes/:path*", "/sign-in", "/sign-up"],
+  matcher: ["/notes/:path*", "/sign-in", "/sign-up"],
 };
